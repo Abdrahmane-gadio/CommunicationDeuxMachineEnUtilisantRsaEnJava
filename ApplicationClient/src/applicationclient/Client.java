@@ -5,11 +5,33 @@
  */
 package applicationclient;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.security.SecureRandom;
+
 /**
  *
  * @author HP
  */
 public class Client extends javax.swing.JFrame {
+    
+    static BigInteger p;
+    static BigInteger q;
+    static BigInteger n;
+    static BigInteger phi;
+    static BigInteger e;
+    static BigInteger d;
+    static BigInteger message;
+    static Socket socket;
+    static ServerSocket serversocket;
+    static DataInputStream entreSocket;
+    static DataOutputStream sortieSocket;
+
 
     /**
      * Creates new form Client
@@ -214,7 +236,7 @@ public class Client extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(envoyer, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 10, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(ip))))
                 .addGap(25, 25, 25))
         );
@@ -334,11 +356,17 @@ public class Client extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(161, 161, 161))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -378,6 +406,125 @@ public class Client extends javax.swing.JFrame {
             }
         });
     }
+    
+      public void envoyer(String text,int port){
+            
+                try{
+                socket= new Socket();
+                serversocket= new  ServerSocket(port);
+                socket=serversocket.accept();
+                
+                 
+                    entreSocket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                sortieSocket = new DataOutputStream(socket.getOutputStream());
+                   while(true){
+                       text=entreSocket.readUTF();
+                       output.setText(output.getText()+"\n Client:::!!!"+text);
+                   }
+                }catch(IOException e){
+                //
+            
+               }
+               
+            
+           }
+      
+           /// GENERATION DE CLés:::::::::::::::::
+      
+           public void genkeypairs(int taill){
+        taill=Integer.parseInt(taille.getText());
+        SecureRandom random = new SecureRandom();
+        p=BigInteger.probablePrime(taill, random);
+        q=BigInteger.probablePrime(taill, random);
+        n=p.multiply(q);
+        
+        phi=(p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
+        
+        do 
+        {
+            e=BigInteger.probablePrime(32, random);
+        }while(e.gcd(phi).intValue()!=1);
+        
+        d=e.modInverse(phi);
+        //return "+e+" "+d+" "+n+";
+   }
+           
+            public BigInteger getN(){
+              return n;
+        }
+    
+         public BigInteger getD(){
+             
+                return d;
+         }
+                     
+            public BigInteger getE(){
+                   
+                return e;
+           }
+                            
+            public String publickey(){
+                
+                return "["+e+" "+n+"]";
+            }
+        
+            public String privateKey(){
+                
+                return "["+d+" "+n+"]"; 
+                
+            }
+            
+            /// FONCTION DE CHIFFREMENT ET DECHIFFREMENT
+            
+            public String chiffrer(String message){
+            int i;
+            byte[] temp = new byte[1];
+        
+             BigInteger[] chiffre;
+        
+        
+            BigInteger[] mes;
+                
+             byte[] plainTextByte=message.getBytes();
+        
+            mes=new BigInteger[plainTextByte.length];
+            for(i=0;i<=mes.length;i++){
+                
+                temp[0]=plainTextByte[i];
+             
+                mes[i]=new BigInteger(temp);
+             }
+            
+            
+                chiffre=new BigInteger[mes.length];
+                    for(i=0;i<=mes.length;i++){
+                    
+                        chiffre[i]=mes[i].modPow(e,n);
+                    }
+                    String stringChiffre=chiffre.toString();
+                return stringChiffre;
+        }
+            
+             public String dechiffre( BigInteger[] chifre){
+               BigInteger[] message = null;
+               BigInteger[] dechi;
+                
+                dechi= new BigInteger[chifre.length];
+                
+                for(int i=0;i<dechi.length;i++){
+                    message[i]= chifre[i].modPow(d, n);
+                }
+                char[] charArraye= new char[message.length];
+                
+                    for(int i=0;i<charArraye.length;i++){
+                        charArraye[i]=(char)(message[i].intValue());
+                   }
+                 return (new String(charArraye));
+        
+             }
+             
+             
+           
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button chiffrer;

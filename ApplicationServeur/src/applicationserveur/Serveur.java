@@ -5,7 +5,13 @@
  */
 package applicationserveur;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.security.SecureRandom;
 
 /**
@@ -13,13 +19,17 @@ import java.security.SecureRandom;
  * @author HP
  */
 public class Serveur extends javax.swing.JFrame {
-    protected BigInteger p;
-    protected BigInteger q;
-    protected BigInteger n;
-    protected BigInteger phi;
-    protected BigInteger e;
-    protected BigInteger d;
-    protected BigInteger message;
+    static BigInteger p;
+    static BigInteger q;
+    static BigInteger n;
+    static BigInteger phi;
+    static BigInteger e;
+    static BigInteger d;
+    static BigInteger message;
+    static Socket socket;
+    static ServerSocket serversocket;
+    static DataInputStream entreSocket;
+    static DataOutputStream sortieSocket;
 
     /**
      * Creates new form Serveur
@@ -536,9 +546,29 @@ public class Serveur extends javax.swing.JFrame {
                 */
                  return (new String(charArraye));
         
-        }
-         
-         
+           }
+           
+           public void envoyer(String text,int port){
+            
+                try{
+                socket= new Socket();
+                serversocket= new  ServerSocket(port);
+                socket=serversocket.accept();
+                
+                 
+                entreSocket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                sortieSocket = new DataOutputStream(socket.getOutputStream());
+                   while(true){
+                       text=entreSocket.readUTF();
+                       output.setText(output.getText()+"\n Client:::!!!"+text);
+                   }
+                }catch(IOException e){
+                //
+            
+               }
+               
+            
+           }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button button1;
