@@ -227,6 +227,9 @@
                 </Property>
                 <Property name="label" type="java.lang.String" value="CHIFFRER"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chiffrerActionPerformed"/>
+              </Events>
             </Component>
             <Component class="java.awt.Button" name="button1">
               <Properties>
@@ -511,6 +514,9 @@
                 </Property>
                 <Property name="label" type="java.lang.String" value="DECHIFFRER"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dechiffrerActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

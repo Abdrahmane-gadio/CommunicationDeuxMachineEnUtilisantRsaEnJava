@@ -5,11 +5,21 @@
  */
 package applicationserveur;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
 /**
  *
  * @author HP
  */
 public class Serveur extends javax.swing.JFrame {
+    protected BigInteger p;
+    protected BigInteger q;
+    protected BigInteger n;
+    protected BigInteger phi;
+    protected BigInteger e;
+    protected BigInteger d;
+    protected BigInteger message;
 
     /**
      * Creates new form Serveur
@@ -98,6 +108,11 @@ public class Serveur extends javax.swing.JFrame {
         chiffrer.setBackground(new java.awt.Color(0, 255, 64));
         chiffrer.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         chiffrer.setLabel("CHIFFRER");
+        chiffrer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chiffrerActionPerformed(evt);
+            }
+        });
 
         button1.setBackground(new java.awt.Color(0, 255, 64));
         button1.setLabel("START");
@@ -267,6 +282,11 @@ public class Serveur extends javax.swing.JFrame {
         dechiffrer.setBackground(new java.awt.Color(0, 255, 64));
         dechiffrer.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         dechiffrer.setLabel("DECHIFFRER");
+        dechiffrer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dechiffrerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -342,12 +362,43 @@ public class Serveur extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void genererActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genererActionPerformed
-        // TODO add your handling code here:
+        if(taille.getText().isEmpty()){
+            input.append("Veuillez entre la taille de votre clé!!!!!!!");
+        }else{
+            int tail=Integer.parseInt(taille.getText());
+            genkeypairs(tail);
+        }
     }//GEN-LAST:event_genererActionPerformed
 
     private void envoyerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_envoyerActionPerformed
+
+    private void chiffrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chiffrerActionPerformed
+        String msgIn="";
+        if(input.getText().isEmpty()){
+            input.setText(" Votre champs de text est vide");
+        }else{
+            msgIn=input.getText();
+            chiffrer(msgIn);
+            output.append(chiffrer(msgIn));
+        }
+    }//GEN-LAST:event_chiffrerActionPerformed
+
+    private void dechiffrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dechiffrerActionPerformed
+        String msgOut="";
+        String msg="";
+        BigInteger msgBig;
+        if(output.getText().isEmpty()){
+            output.setText("pas de texte a déchiffrer");
+        }else{
+            msgOut=output.getText();
+            byte[] bigmsg=msgOut.getBytes();
+            BigInteger[] msgoutByte= new BigInteger[bigmsg.length];
+            dechiffre(msgoutByte);
+            
+        }
+    }//GEN-LAST:event_dechiffrerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -383,6 +434,111 @@ public class Serveur extends javax.swing.JFrame {
             }
         });
     }
+      public void genkeypairs(int taill){
+        taill=Integer.parseInt(taille.getText());
+        SecureRandom random = new SecureRandom();
+        p=BigInteger.probablePrime(taill, random);
+        q=BigInteger.probablePrime(taill, random);
+        n=p.multiply(q);
+        
+        phi=(p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
+        
+        do 
+        {
+            e=BigInteger.probablePrime(32, random);
+        }while(e.gcd(phi).intValue()!=1);
+        
+        d=e.modInverse(phi);
+        //return "+e+" "+d+" "+n+";
+   }
+      
+         public BigInteger getN(){
+              return n;
+        }
+    
+         public BigInteger getD(){
+             
+                return d;
+         }
+                     
+            public BigInteger getE(){
+                   
+                return e;
+           }
+                            
+            public String publickey(){
+                
+                return "["+e+" "+n+"]";
+            }
+        
+            public String privateKey(){
+                
+                return "["+d+" "+n+"]"; 
+                
+            }
+         
+           // Methode qui permet de chiffrer
+         
+         public String chiffrer(String message){
+            int i;
+            byte[] temp = new byte[1];
+        
+             BigInteger[] chiffre;
+        
+        
+            BigInteger[] mes;
+                
+             byte[] plainTextByte=message.getBytes();
+        
+            mes=new BigInteger[plainTextByte.length];
+            for(i=0;i<=mes.length;i++){
+                
+                temp[0]=plainTextByte[i];
+             
+                mes[i]=new BigInteger(temp);
+             }
+            
+            
+                chiffre=new BigInteger[mes.length];
+                    for(i=0;i<=mes.length;i++){
+                    
+                        chiffre[i]=mes[i].modPow(e,n);
+                    }
+                    String stringChiffre=chiffre.toString();
+        //chiffre=mes.modPow(e,n);
+                return stringChiffre;
+        }
+         
+         // METHODE QUI PERMET DE DECHIFFRE
+         
+           public String dechiffre( BigInteger[] chifre){
+               BigInteger[] message = null;
+               BigInteger[] dechi;
+                
+                dechi= new BigInteger[chifre.length];
+                
+                for(int i=0;i<dechi.length;i++){
+                    message[i]= chifre[i].modPow(d, n);
+                }
+                char[] charArraye= new char[message.length];
+                
+                    for(int i=0;i<charArraye.length;i++){
+                        charArraye[i]=(char)(message[i].intValue());
+                   }
+             
+                /*String dechiString;
+                
+                dechi=chifre.modPow(d, n);
+                
+                byte[] dechibyte=dechi.toByteArray();
+                
+                dechiString=new String(dechibyte);
+                */
+                 return (new String(charArraye));
+        
+        }
+         
+         
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button button1;
