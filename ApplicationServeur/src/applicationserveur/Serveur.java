@@ -19,17 +19,20 @@ import java.security.SecureRandom;
  * @author HP
  */
 public class Serveur extends javax.swing.JFrame {
-    static BigInteger p;
-    static BigInteger q;
-    static BigInteger n;
-    static BigInteger phi;
-    static BigInteger e;
-    static BigInteger d;
-    static BigInteger message;
+
+    public static BigInteger p;
+    public static BigInteger q;
+    public static BigInteger n;
+    public static BigInteger phi;
+    public static BigInteger e;
+    public static BigInteger d;
+    //static BigInteger message;
     static Socket socket;
     static ServerSocket serversocket;
     static DataInputStream entreSocket;
     static DataOutputStream sortieSocket;
+    static BigInteger cipherVal;
+    //static BigInteger val;
 
     /**
      * Creates new form Serveur
@@ -63,6 +66,12 @@ public class Serveur extends javax.swing.JFrame {
         taille = new javax.swing.JTextField();
         generer = new java.awt.Button();
         partager = new java.awt.Button();
+        jLabel6 = new javax.swing.JLabel();
+        inpute = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        inputd = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        inputn = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         port = new javax.swing.JTextField();
@@ -70,7 +79,7 @@ public class Serveur extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        output = new javax.swing.JTextArea();
+        outputServeur = new javax.swing.JTextArea();
         jPanel7 = new javax.swing.JPanel();
         dechiffrer = new java.awt.Button();
 
@@ -98,9 +107,11 @@ public class Serveur extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -135,7 +146,7 @@ public class Serveur extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -144,7 +155,7 @@ public class Serveur extends javax.swing.JFrame {
                         .addGap(49, 49, 49))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addComponent(stop, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                        .addGap(56, 56, 56)
                         .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
@@ -182,37 +193,73 @@ public class Serveur extends javax.swing.JFrame {
         partager.setBackground(new java.awt.Color(0, 255, 64));
         partager.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         partager.setLabel("PARTAGER");
+        partager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                partagerActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("e:");
+
+        jLabel7.setText("d:");
+
+        jLabel8.setText("n:");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(partager, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(taille, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addComponent(taille, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel2)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(199, 199, 199)
                         .addComponent(generer, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2))
-                .addGap(28, 28, 28)
-                .addComponent(partager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(inpute, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(inputd, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel8)
+                        .addGap(18, 18, 18)
+                        .addComponent(inputn, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(23, 23, 23)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(inpute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(inputd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(inputn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(partager, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(generer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(taille))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(partager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(taille, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
         );
 
         jPanel5.setBackground(new java.awt.Color(217, 255, 217));
@@ -233,17 +280,15 @@ public class Serveur extends javax.swing.JFrame {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(envoyer, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(65, 65, 65)
-                        .addComponent(envoyer, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(port, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(48, 48, 48))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -263,9 +308,9 @@ public class Serveur extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(0, 204, 153));
         jLabel5.setText("OUTPUT");
 
-        output.setColumns(20);
-        output.setRows(5);
-        jScrollPane2.setViewportView(output);
+        outputServeur.setColumns(20);
+        outputServeur.setRows(5);
+        jScrollPane2.setViewportView(outputServeur);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -277,15 +322,16 @@ public class Serveur extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                .addComponent(jScrollPane2)
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2)
+                .addContainerGap()
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -322,18 +368,14 @@ public class Serveur extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -344,17 +386,17 @@ public class Serveur extends javax.swing.JFrame {
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
+                        .addGap(35, 35, 35)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 19, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -372,43 +414,104 @@ public class Serveur extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void genererActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genererActionPerformed
-        if(taille.getText().isEmpty()){
+        if (taille.getText().isEmpty()) {
+            input.setText("");
             input.append("Veuillez entre la taille de votre clé!!!!!!!");
-        }else{
-            int tail=Integer.parseInt(taille.getText());
+        } else {
+            int tail = Integer.parseInt(taille.getText());
             genkeypairs(tail);
+            //output.append(genkeypairs(tail));
         }
     }//GEN-LAST:event_genererActionPerformed
 
     private void envoyerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerActionPerformed
-        // TODO add your handling code here:
+         //int valport=Integer.parseInt(port.getText());
+        //if(port.getText().isEmpty()){
+        // System.out.println("");
+        //}else{
+        String messageOut = "";
+        messageOut = input.getText();
+        try {
+            sortieSocket.writeUTF(messageOut);
+            //jTextFieldInput.setText("");
+        } catch (IOException ex) {
+            //Logger.getLogger(InterfaceServeur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //envoyer(valport);
+        //envoyer();
+        // }
+
     }//GEN-LAST:event_envoyerActionPerformed
 
     private void chiffrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chiffrerActionPerformed
-        String msgIn="";
-        if(input.getText().isEmpty()){
+        String msgIn = "";
+
+          if (input.getText().isEmpty()) {
+            input.setText("");
             input.setText(" Votre champs de text est vide");
-        }else{
-            msgIn=input.getText();
-            chiffrer(msgIn);
-            output.append(chiffrer(msgIn));
-        }
+        //    outputServeur.setText(" ugfiosdfungoisuoinfffs  s df sd f sdf é");
+
+            } else {
+
+            msgIn = input.getText();
+            byte[] messageByte=msgIn.getBytes();
+            String valeurE = inpute.getText();
+            byte[] valE=valeurE.getBytes();
+            String valeurN = inputn.getText();
+            byte[] valN= valeurN.getBytes();
+            BigInteger valeure = new BigInteger(valE);
+            BigInteger valeurn;
+            valeurn = new BigInteger(valN);
+            BigInteger msgBig= new BigInteger(messageByte);
+            chiffrer(msgBig, valeure, valeurn);
+
+            input.setText(chiffrer(msgBig,valeure,valeurn));
+
+       }
     }//GEN-LAST:event_chiffrerActionPerformed
 
     private void dechiffrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dechiffrerActionPerformed
-        String msgOut="";
-        String msg="";
-        BigInteger msgBig;
-        if(output.getText().isEmpty()){
-            output.setText("pas de texte a déchiffrer");
+        if(outputServeur.getText().isEmpty()){
+            outputServeur.setText("champs vide");
         }else{
-            msgOut=output.getText();
-            byte[] bigmsg=msgOut.getBytes();
-            BigInteger[] msgoutByte= new BigInteger[bigmsg.length];
-            dechiffre(msgoutByte);
+            String msgIn="";
+            msgIn=outputServeur.getText();
+            byte[] msgInByte=msgIn.getBytes();
+            BigInteger msgBig= new BigInteger(msgInByte);
+            BigInteger[] plaintextBig = new BigInteger[msgBig.byteValue()];
+            String valeurD=inputd.getText();
+            String valeurN=inputn.getText();
+            byte[] valD=valeurD.getBytes();
+            byte[] valN=valeurN.getBytes();
+            BigInteger valeurd= new BigInteger(valD);
+            BigInteger valeurn= new BigInteger(valN);
+            dechiffre(plaintextBig,valeurd,valeurn);
+            input.setText(dechiffre(plaintextBig,valeurd,valeurn));
             
         }
     }//GEN-LAST:event_dechiffrerActionPerformed
+
+    private void partagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partagerActionPerformed
+        // TODO add your handling code here:
+        //if((port.getText().isEmpty())){
+        //input.setText("");
+        //input.setText("Aucune valeur port ou addresse");
+        //}else{
+
+        String messageE = "";
+        String messageN = "";
+        messageE = inpute.getText();
+        messageN = inputn.getText();
+        try {
+            sortieSocket.writeUTF(messageE);
+            sortieSocket.writeUTF(messageN);
+
+        } catch (IOException e) {
+            // 
+        }
+        //}
+        //}                    
+    }//GEN-LAST:event_partagerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -443,132 +546,112 @@ public class Serveur extends javax.swing.JFrame {
                 new Serveur().setVisible(true);
             }
         });
+        //int valport=Integer.parseInt(port.getText());
+        partager();
+        //envoyer();
     }
-      public void genkeypairs(int taill){
-        taill=Integer.parseInt(taille.getText());
+
+    public String genkeypairs(int taill) {
+        taill = Integer.parseInt(taille.getText());
         SecureRandom random = new SecureRandom();
-        p=BigInteger.probablePrime(taill, random);
-        q=BigInteger.probablePrime(taill, random);
-        n=p.multiply(q);
-        
-        phi=(p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
-        
-        do 
-        {
-            e=BigInteger.probablePrime(32, random);
-        }while(e.gcd(phi).intValue()!=1);
-        
-        d=e.modInverse(phi);
-        //return "+e+" "+d+" "+n+";
-   }
-      
-         public BigInteger getN(){
-              return n;
+        p = BigInteger.probablePrime(taill, random);
+        q = BigInteger.probablePrime(taill, random);
+        n = p.multiply(q);
+
+        phi = (p.subtract(BigInteger.ONE)).multiply(q.subtract(BigInteger.ONE));
+
+        do {
+            e = BigInteger.probablePrime(32, random);
+        } while (e.gcd(phi).intValue() != 1);
+
+        d = e.modInverse(phi);
+        String stringE = e.toString();
+        inpute.setText(stringE);
+        String stringD = d.toString();
+        inputd.setText(stringD);
+        String stringN = n.toString();
+        inputn.setText(stringN);
+        return "[e:" + e + " d:" + d + " n:" + n + "]";
+    }
+
+    public static void partager() {
+
+        try {
+            //valport=Integer.parseInt(port.getText());
+            String valeurE = "";
+            String valeurN = "";
+            String text = "";
+            socket = new Socket();
+            serversocket = new ServerSocket(8088);
+            socket = serversocket.accept();
+
+            entreSocket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            sortieSocket = new DataOutputStream(socket.getOutputStream());
+
+            while (!valeurE.equals("") || valeurN.equals("") || text.equals("")) {
+
+                valeurE = entreSocket.readUTF();
+                valeurN = entreSocket.readUTF();
+                text = entreSocket.readUTF();
+                inpute.setText(inpute.getText() + "" + valeurE);
+                inputn.setText(inputn.getText() + "" + valeurN);
+                outputServeur.setText(outputServeur.getText() + "" + text);
+            }
+        } catch (IOException e) {
+                //
+
         }
-    
-         public BigInteger getD(){
-             
-                return d;
-         }
-                     
-            public BigInteger getE(){
-                   
-                return e;
-           }
-                            
-            public String publickey(){
-                
-                return "["+e+" "+n+"]";
-            }
-        
-            public String privateKey(){
-                
-                return "["+d+" "+n+"]"; 
-                
-            }
-         
+
+    }
+
            // Methode qui permet de chiffrer
-         
-         public String chiffrer(String message){
-            int i;
-            byte[] temp = new byte[1];
-        
-             BigInteger[] chiffre;
-        
-        
-            BigInteger[] mes;
-                
-             byte[] plainTextByte=message.getBytes();
-        
-            mes=new BigInteger[plainTextByte.length];
-            for(i=0;i<=mes.length;i++){
-                
-                temp[0]=plainTextByte[i];
-             
-                mes[i]=new BigInteger(temp);
-             }
-            
-            
-                chiffre=new BigInteger[mes.length];
-                    for(i=0;i<=mes.length;i++){
-                    
-                        chiffre[i]=mes[i].modPow(e,n);
-                    }
-                    String stringChiffre=chiffre.toString();
-        //chiffre=mes.modPow(e,n);
-                return stringChiffre;
-        }
-         
+    public String chiffrer(BigInteger message, BigInteger valeurE, BigInteger valeurN) {
+        BigInteger msg;
+        msg=message.modPow(valeurE, valeurN);
+        String messageString=msg.toString();
+        return messageString;
+    }
+
          // METHODE QUI PERMET DE DECHIFFRE
-         
-           public String dechiffre( BigInteger[] chifre){
-               BigInteger[] message = null;
+    public String dechiffre( BigInteger[] chifre, BigInteger valeurD, BigInteger valeurN){
+               BigInteger[] Message = null;
                BigInteger[] dechi;
                 
                 dechi= new BigInteger[chifre.length];
                 
                 for(int i=0;i<dechi.length;i++){
-                    message[i]= chifre[i].modPow(d, n);
+                    Message[i]= chifre[i].modPow(valeurD, valeurN);
                 }
-                char[] charArraye= new char[message.length];
+                char[] charArraye= new char[Message.length];
                 
                     for(int i=0;i<charArraye.length;i++){
-                        charArraye[i]=(char)(message[i].intValue());
+                        charArraye[i]=(char)(Message[i].intValue());
                    }
-             
-                /*String dechiString;
-                
-                dechi=chifre.modPow(d, n);
-                
-                byte[] dechibyte=dechi.toByteArray();
-                
-                dechiString=new String(dechibyte);
-                */
                  return (new String(charArraye));
         
-           }
-           
-           public void envoyer(String text,int port){
-            
-                try{
-                socket= new Socket();
-                serversocket= new  ServerSocket(port);
-                socket=serversocket.accept();
-                
-                 
-                entreSocket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-                sortieSocket = new DataOutputStream(socket.getOutputStream());
-                   while(true){
-                       text=entreSocket.readUTF();
-                       output.setText(output.getText()+"\n Client:::!!!"+text);
-                   }
-                }catch(IOException e){
+             }
+    public static void envoyer() {
+
+        try {
+            String text = "";
+                     //valport=Integer.parseInt(port.getText());
+            //socket= new Socket();
+            serversocket = new ServerSocket(8088);
+
+            socket = serversocket.accept();
+
+            entreSocket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            sortieSocket = new DataOutputStream(socket.getOutputStream());
+            while (!text.equals("")) {
+                text = entreSocket.readUTF();
+                input.setText(input.getText() + "" + text);
+            }
+        } catch (IOException e) {
                 //
-            
-               }
-               
-            
-           }
+
+        }
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button button1;
@@ -578,11 +661,17 @@ public class Serveur extends javax.swing.JFrame {
     private java.awt.Button generer;
     private java.awt.Button importer;
     private static javax.swing.JTextArea input;
+    private static javax.swing.JTextField inputd;
+    private static javax.swing.JTextField inpute;
+    private static javax.swing.JTextField inputn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -592,7 +681,7 @@ public class Serveur extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private static javax.swing.JTextArea output;
+    private static javax.swing.JTextArea outputServeur;
     private java.awt.Button partager;
     private static javax.swing.JTextField port;
     private java.awt.Button stop;

@@ -13,6 +13,8 @@ import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.SecureRandom;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,6 +33,9 @@ public class Client extends javax.swing.JFrame {
     static ServerSocket serversocket;
     static DataInputStream entreSocket;
     static DataOutputStream sortieSocket;
+    //static String ipad=ip.getText();
+    //public static int valport=Integer.parseInt(port.getText());
+    
 
 
     /**
@@ -64,6 +69,12 @@ public class Client extends javax.swing.JFrame {
         taille = new javax.swing.JTextField();
         generer = new java.awt.Button();
         partager = new java.awt.Button();
+        jLabel7 = new javax.swing.JLabel();
+        inpute = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        inputd = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        inputn = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         port = new javax.swing.JTextField();
@@ -79,7 +90,6 @@ public class Client extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("COMMUNICATION RESEAU (CLIENT)");
-        setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(192, 192, 192));
 
@@ -122,6 +132,11 @@ public class Client extends javax.swing.JFrame {
         chiffrer.setBackground(new java.awt.Color(0, 255, 64));
         chiffrer.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         chiffrer.setLabel("CHIFFRER");
+        chiffrer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chiffrerActionPerformed(evt);
+            }
+        });
 
         connect.setBackground(new java.awt.Color(0, 255, 64));
         connect.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
@@ -131,24 +146,24 @@ public class Client extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(58, 58, 58)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(importer, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
-                    .addComponent(chiffrer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(connect, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(34, 34, 34))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(76, 76, 76)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(importer, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                    .addComponent(chiffrer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(connect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGap(19, 19, 19)
                 .addComponent(importer, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(chiffrer, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36))
         );
@@ -165,45 +180,78 @@ public class Client extends javax.swing.JFrame {
         generer.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         generer.setForeground(new java.awt.Color(87, 105, 253));
         generer.setLabel("GENERER");
+        generer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                genererActionPerformed(evt);
+            }
+        });
 
         partager.setBackground(new java.awt.Color(0, 255, 64));
         partager.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         partager.setLabel("PARTAGER");
+        partager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                partagerActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("e:");
+
+        jLabel8.setText("d:");
+
+        jLabel9.setText("n:");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(39, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(inpute, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(inputd, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel9)
+                        .addGap(18, 18, 18)
+                        .addComponent(inputn, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(taille, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                        .addGap(40, 40, 40)
                         .addComponent(generer, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(partager, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(partager, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(19, 19, 19))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(taille, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(generer, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(partager, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inpute, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(inputd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9)
+                    .addComponent(inputn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(partager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(generer, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(taille, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(29, 29, 29))
         );
 
         jPanel4.setBackground(new java.awt.Color(217, 255, 217));
@@ -217,6 +265,11 @@ public class Client extends javax.swing.JFrame {
         envoyer.setBackground(new java.awt.Color(0, 255, 64));
         envoyer.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         envoyer.setLabel("ENVOYER");
+        envoyer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                envoyerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -232,12 +285,14 @@ public class Client extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(envoyer, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(ip))))
+                                .addGap(9, 9, 9)
+                                .addComponent(ip))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(31, 31, 31)
+                                .addComponent(envoyer, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 33, Short.MAX_VALUE)))))
                 .addGap(25, 25, 25))
         );
         jPanel4Layout.setVerticalGroup(
@@ -251,8 +306,8 @@ public class Client extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ip, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(envoyer, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(envoyer, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -291,22 +346,27 @@ public class Client extends javax.swing.JFrame {
         dechiffrer.setBackground(new java.awt.Color(0, 255, 64));
         dechiffrer.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         dechiffrer.setLabel("DECHIFFRER");
+        dechiffrer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dechiffrerActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(71, 71, 71)
                 .addComponent(dechiffrer, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(61, 61, 61)
+                .addGap(60, 60, 60)
                 .addComponent(dechiffrer, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -317,18 +377,21 @@ public class Client extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(33, 33, 33))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
+                        .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -340,7 +403,9 @@ public class Client extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
@@ -356,10 +421,10 @@ public class Client extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(161, 161, 161))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 797, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -372,10 +437,113 @@ public class Client extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void genererActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genererActionPerformed
+      // TODO add your handling code here:
+        if(taille.getText().isEmpty()){
+            input.setText("");
+            input.append("Veuillez entre la taille de votre clé!!!!!!!");
+        }else{
+            int tail=Integer.parseInt(taille.getText());
+            genkeypairs(tail);
+            //output.append(genkeypairs(tail));
+        }
+    }//GEN-LAST:event_genererActionPerformed
+
+    private void partagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_partagerActionPerformed
+       //if((port.getText().isEmpty())||(ip.getText().isEmpty())){
+           // input.setText("");
+            //input.setText("Aucune valeur port ou addresse");
+       // }else{
+           
+           //String ipaddress=ip.getText();
+         //int valeurPort=Integer.parseInt(port.getText());
+        //partager(ipaddress,valeurPort);
+        
+            
+            String messageE="";
+            String messageN="";
+            messageE=inpute.getText();
+            messageN=inputn.getText();
+            try{
+                sortieSocket.writeUTF(messageE);
+                sortieSocket.writeUTF(messageN);
+                
+                
+            }catch(IOException e){
+               // 
+            }
+        //}
+    }//GEN-LAST:event_partagerActionPerformed
+
+    private void envoyerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerActionPerformed
+        // TODO add your handling code here:
+        String messageOut="";
+        messageOut=input.getText();
+        try {
+            sortieSocket.writeUTF(messageOut);
+            //jTextFieldInput.setText("");
+        } catch (IOException ex) {
+            //Logger.getLogger(InterfaceServeur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //envoyer(valport);
+        //envoyer();
+      // }
+                
+    }//GEN-LAST:event_envoyerActionPerformed
+
+    private void dechiffrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dechiffrerActionPerformed
+        if(output.getText().isEmpty()){
+            output.setText("champs vide");
+        }else{
+            String msgIn="";
+            msgIn=output.getText();
+            byte[] msgInByte=msgIn.getBytes();
+            BigInteger msgBig= new BigInteger(msgInByte);
+            BigInteger[] plaintextBig = new BigInteger[msgBig.byteValue()];
+            String valeurD=inputd.getText();
+            String valeurN=inputn.getText();
+            byte[] valD=valeurD.getBytes();
+            byte[] valN=valeurN.getBytes();
+            BigInteger valeurd= new BigInteger(valD);
+            BigInteger valeurn= new BigInteger(valN);
+            dechiffre(plaintextBig,valeurd,valeurn);
+            input.setText(dechiffre(plaintextBig,valeurd,valeurn));
+            
+        }
+    }//GEN-LAST:event_dechiffrerActionPerformed
+
+    private void chiffrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chiffrerActionPerformed
+        // TODO add your handling code here:
+         String msgIn = "";
+
+          if (input.getText().isEmpty()) {
+            input.setText("");
+            input.setText(" Votre champs de text est vide");
+        //    outputServeur.setText(" ugfiosdfungoisuoinfffs  s df sd f sdf é");
+
+            } else {
+
+            msgIn = input.getText();
+            byte[] messageByte=msgIn.getBytes();
+            String valeurE = inpute.getText();
+            byte[] valE=valeurE.getBytes();
+            String valeurN = inputn.getText();
+            byte[] valN= valeurN.getBytes();
+            BigInteger valeure = new BigInteger(valE);
+            BigInteger valeurn;
+            valeurn = new BigInteger(valN);
+            BigInteger msgBig= new BigInteger(messageByte);
+            chiffrer(msgBig, valeure, valeurn);
+
+            input.setText(chiffrer(msgBig,valeure,valeurn));
+          }
+
+    }//GEN-LAST:event_chiffrerActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+   public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -388,38 +556,90 @@ public class Client extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Client().setVisible(true);
             }
         });
+        partager();
+        //envoyer();
+                
+    }
+   
+     public String chiffrer(BigInteger message, BigInteger valeurE, BigInteger valeurN) {
+       /* byte[] msg = message.getBytes();
+        for (int i = 0; i < message.length(); i++) {
+            int asciival = msg[i];
+            BigInteger val= new BigInteger(""+ asciival);
+            BigInteger cipherVal;
+            cipherVal = val.modPow(valeurE, valeurN);
+            String stringChiffre = cipherVal.toString();
+
+            System.out.println(stringChiffre);
+        }
+        String stringChiffre = cipherVal.toString();*/
+
+       /* int i;
+         byte[] temp = new byte[1];
+        
+         BigInteger[] chiffre;
+        
+        
+         BigInteger[] mes;
+                
+         byte[] plainTextByte=message.getBytes();
+        
+         mes=new BigInteger[plainTextByte.length];
+         for(i=0;i<=mes.length;i++){
+                
+         temp[0]=plainTextByte[i];
+             
+         mes[i]=new BigInteger(temp);
+         }
+            
+            
+         chiffre=new BigInteger[mes.length];
+         for(i=0;i<=mes.length;i++){
+                    
+         chiffre[i]=mes[i].modPow(valeurE,valeurN);
+         }
+         String stringChiffre=chiffre.toString();*/
+        BigInteger msg;
+        msg=message.modPow(valeurE, valeurN);
+        String messageString=msg.toString();
+        return messageString;
     }
     
-      public void envoyer(String text,int port){
-            
-                try{
-                socket= new Socket();
-                serversocket= new  ServerSocket(port);
-                socket=serversocket.accept();
+ 
+      public static void partager(){
                 
-                 
+                try{
+                    String valeurE="";
+                String valeurN="";
+                String text="";
+                    //ipad=ip.getText();
+                    //valport=Integer.parseInt(port.getText());
+                
+                socket= new Socket("127.0.0.1",8088);
+
                     entreSocket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
                 sortieSocket = new DataOutputStream(socket.getOutputStream());
-                   while(true){
+                   while(!valeurE.equals("")||valeurN.equals("")||text.equals("")){
+                       valeurE=entreSocket.readUTF();
+                       valeurN=entreSocket.readUTF();
                        text=entreSocket.readUTF();
-                       output.setText(output.getText()+"\n Client:::!!!"+text);
+                       inpute.setText(inpute.getText()+""+valeurE);
+                       inputn.setText(inputn.getText()+""+valeurN);
+                       output.setText(output.getText()+""+text);
                    }
                 }catch(IOException e){
                 //
@@ -446,33 +666,15 @@ public class Client extends javax.swing.JFrame {
         }while(e.gcd(phi).intValue()!=1);
         
         d=e.modInverse(phi);
+        String stringE=e.toString();
+        inpute.setText(stringE);
+        String stringD=d.toString();
+        inputd.setText(stringD);
+        String stringN=n.toString();
+        inputn.setText(stringN);
         //return "+e+" "+d+" "+n+";
    }
            
-            public BigInteger getN(){
-              return n;
-        }
-    
-         public BigInteger getD(){
-             
-                return d;
-         }
-                     
-            public BigInteger getE(){
-                   
-                return e;
-           }
-                            
-            public String publickey(){
-                
-                return "["+e+" "+n+"]";
-            }
-        
-            public String privateKey(){
-                
-                return "["+d+" "+n+"]"; 
-                
-            }
             
             /// FONCTION DE CHIFFREMENT ET DECHIFFREMENT
             
@@ -505,23 +707,51 @@ public class Client extends javax.swing.JFrame {
                 return stringChiffre;
         }
             
-             public String dechiffre( BigInteger[] chifre){
-               BigInteger[] message = null;
+             public String dechiffre( BigInteger[] chifre, BigInteger valeurD, BigInteger valeurN){
+               BigInteger[] Message = null;
                BigInteger[] dechi;
                 
                 dechi= new BigInteger[chifre.length];
                 
                 for(int i=0;i<dechi.length;i++){
-                    message[i]= chifre[i].modPow(d, n);
+                    Message[i]= chifre[i].modPow(valeurD, valeurN);
                 }
-                char[] charArraye= new char[message.length];
+                char[] charArraye= new char[Message.length];
                 
                     for(int i=0;i<charArraye.length;i++){
-                        charArraye[i]=(char)(message[i].intValue());
+                        charArraye[i]=(char)(Message[i].intValue());
                    }
                  return (new String(charArraye));
         
              }
+             
+             
+             //// FONCTION QUUI PERMET D'ENVOYER
+             public static void envoyer(){
+            
+                try{
+                    String text="";
+                    //ipad=ip.getText();
+                    //valport=Integer.parseInt(port.getText());
+                socket= new Socket("127.0.0.1",8088);
+                //serversocket= new  ServerSocket(valport);
+               //socket=serversocket.accept();
+                
+                 
+                entreSocket = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                sortieSocket = new DataOutputStream(socket.getOutputStream());
+                   while(true){
+                       text=entreSocket.readUTF();
+                       input.setText(input.getText()+" "+text);
+                   }
+                }catch(IOException e){
+                //
+            
+               }
+               
+            
+           }
+
              
              
            
@@ -534,6 +764,9 @@ public class Client extends javax.swing.JFrame {
     private java.awt.Button generer;
     private java.awt.Button importer;
     private static javax.swing.JTextArea input;
+    private static javax.swing.JTextField inputd;
+    private static javax.swing.JTextField inpute;
+    private static javax.swing.JTextField inputn;
     private static javax.swing.JTextField ip;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -541,6 +774,9 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
